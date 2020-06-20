@@ -1,0 +1,144 @@
+@mixin dFjCaC()
+    display: flex
+    justify-content: center
+    align-items: center
+
+@mixin hw()
+    height: 100vh
+    width: 100%
+
+body,
+head,
+html
+    padding: 0
+    margin: 0
+    line-height: 1
+    font-family: sans-serif
+
+body
+    transition: all 0.3s
+
+.main-section
+    @include dFjCaC
+    @include hw
+    .info,
+    .help,
+    &__content
+        width: 400px
+        height: 400px
+    .info
+        visibility: hidden
+    &__content
+        display: flex
+        flex-direction: column
+        align-items: center
+        .btn-div
+            display: flex
+            justify-content: space-between
+            @include dFjCaC
+            button
+                height: 50px
+                width: 100px
+                box-shadow: 0 0 10px black
+                outline: none
+                border: 1px solid white
+                background: white
+                transition: all .08s
+                cursor: pointer
+                margin: 0 10px
+                &:active
+                    transform: scale(0.9)
+                    border: 5px solid green
+        .color-div
+            background: white
+            width: 90%
+            height: auto
+            margin-top: 10px
+            display: flex
+            justify-content: center
+            flex-direction: column
+            padding: 10px 10px
+            box-shadow: 0 0 10px black
+            span
+                text-align: center
+        .history
+            margin-top: 10px
+            width: 400px
+            border: 1px solid black
+            display: flex
+            flex-wrap: wrap
+            background: white
+            .cube
+                width: 8px
+                height: 40px
+                box-shadow: 0 0 5px black
+
+
+.api-testing
+    @include dFjCaC
+    flex-wrap: wrap
+    width: 80%
+    min-height: 100vh
+    padding: 0 10%
+    .images-api,
+    .tasks-api
+        width: 100%
+        min-height: 30vh
+        border: 1px solid black
+        margin: 0
+        padding: 0
+        overflow: hidden
+        background: white
+        &__content
+            display: flex
+            flex-wrap: wrap
+            &-condition
+                width: 100%
+                padding: 0 20%
+                display: flex
+                justify-content: space-evenly
+                padding-top: 10px
+            &-images
+                padding: 10px
+    .tasks-api
+        &__content
+            display: flex
+            flex-wrap: wrap
+            &-buttons
+                width: 100%
+                padding: 0 20%
+                display: flex
+                justify-content: space-evenly
+                padding-top: 10px
+            &-tasks
+                width: 50%
+                padding: 10px
+                margin: 0 auto
+                &_ul
+                    @include dFjCaC
+                    flex-direction: column
+                    .task-div
+                        width: 500px
+                        height: 50px
+                        list-style-type: none
+                        border: 1px solid black
+                        margin-top: 9px
+                        display: flex
+                        align-items: center
+                        padding: 0 3px
+                        justify-content: space-between
+                        .close
+                            transform: scale(3) rotate(45deg) 
+                            margin-right: 10px
+                            opacity: .3
+                            &:hover
+                                opacity: 1
+                                cursor: pointer
+.done
+    .task
+        text-decoration: line-through
+
+
+
+
+

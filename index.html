@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-e-experiments</title>
+    <link href="css/styles.css" rel="stylesheet">
+    <script src="jquery-3.5.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <section class="main-section">
+        <div class="help"></div>
+        <div class="main-section__content">
+            <div class="btn-div">
+                <button class="btn">click me</button>
+                <button class="info-trigger">info</button>
+            </div>
+            <div class="color-div">
+                <span>Вам выпал цвет :
+                    <span class="color"></span>
+                </span>
+                <span>Нажатий на кнопку:
+                    <span class="countOfClicks"></span>
+                </span>
+                <span>Предыдущий выпавший цвет:
+                    <span class="lastColor">(жми на кнопку!)</span>
+                </span>
+            </div>
+            <div class="history"></div>
+        </div>
+        <div class="info">
+            <span>
+                Самый частый цвет: <span class="oftenColor"></span>
+            </span>
+        </div>
+    </section>
+    <section class="api-testing">
+        <div class="images-api">
+            <div class="images-api__content">
+                <div class="images-api__content-condition">
+                    <div>
+                        <span>Page:</span> 
+                        <input type="number" id="pageNumber" value="1">
+                    </div>
+                    <div>
+                        <span>Count: </span>  
+                        <input type="number" id="count" value="9">
+                    </div>
+                    <div>
+                        <button id="getImages">Get Images</button>
+                    </div>
+                </div>
+                <div class="images-api__content-images"></div>
+            </div>
+        </div>
+        <div class="tasks-api">
+            <div class="tasks-api__content">
+                <div class="tasks-api__content-buttons">
+                    <div class="tasks-api__content-buttons_add">
+                        <span>Type something (max 32 symbols):</span>
+                        <input type="text" id="taskText">
+                        <button id="addTask">Add Task</button>
+                    </div>
+                </div>
+                <div class="tasks-api__content-tasks">
+                    <ul class="tasks-api__content-tasks_ul"></ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <script src="./script.js"></script>
+    <script src="./service.js"></script>
+</body>
+
+</html>
