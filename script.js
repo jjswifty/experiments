@@ -1,6 +1,8 @@
+const reverseNum = num => -num;
+
 (function colourful() {
-    // функция генерирует рандомное число из заданного интервала, 
-    // включая в себя минимальное и максимальное значение
+    // функция генерирует псевдорандомное число из заданного интервала, 
+    // включая минимальное и максимальное значение
     function getRandomNumber(min, max) {
         let rand = min - 0.5 + Math.random() * (max - min + 1);
         return Math.round(rand);
@@ -41,104 +43,152 @@
         $('.countOfClicks').text(countOfClicks);
         $('.lastColor').text(colorsChange[countOfClicks - 1]);
         $('.history').append($("<div class='cube'></div>").css("background", generatedColor).attr('id', countOfClicks));
-
     })
 }())
-// запрос на сервер после загрузки window
-window.onload = (() => getTasks(WIDGET_ID).then(data => onTasksReceived(data)))
 
 $('#getImages').click(() => {
     if ($('#pageNumber').val() == '' || $('#count').val() == '') {
         alert('Введите ВСЕ данные.');
         return;
     }
-    getImages($('#pageNumber').val(), $('#count').val())
-        .then(data => onDataReceived(data))
+    imagesAPI.getImages($('#pageNumber').val(), $('#count').val())
+        .then(data => onImagesReceived(data))
 })
 
-const onDataReceived = images => {
+const onImagesReceived = images => {
     images.forEach(el => {
         $('.images-api__content-images').append($(`<img src=${el.thumbnail}>`));
     })
 }
 
-$('#addTask').click(() => {
-    if ($('#taskText').val() == '') {
-        alert('Введите текст задачи.');
-        return;
-    }
-    createTask(WIDGET_ID, $('#taskText').val())
-        .then(() => {
-            getTasks(WIDGET_ID)
-                .then(data => {
-                    $('.tasks-api__content-tasks_ul')
-                        .append(
-                            $(` <div class="task-div" ${data[data.length - 1].done ? 'done' : ''} 
-                                    data-id=${data[data.length - 1].id}> 
-                                    <input type="checkbox" class="toggleStatus"
-                                    maxlength="32"
-                                    ${data[data.length - 1].done ? ' checked ' : ''}
-                                    ${data[data.length - 1].done ? ' disabled ' : ''}>
-                                        <li class="task"> ${data[data.length - 1].title} </li> 
-                                        <span class="close">+</span> 
-                                </div>`));
-                                addListeners()
-                })
-                
-                    
-                
+// todo
+
+const removeTask = (t) => {
+    todoAPI.deleteTask(WIDGET_ID, $(t).parent().data('id'))
+    $(t).parent().remove();
+}
+
+const toggleStatus = (t) => {
+    $(t).prop('disabled', true);
+    todoAPI.toggleTask(WIDGET_ID, $(t).parent().data('id'), t.checked ? true : false)
+        .then(response => {
+            if(response.status === 'success') {
+                t.checked ? t.checked : !t.checked
+                $(t).prop('disabled', false)
+            }
         })
-        
-    $('#taskText').val('');
-
-// limit делаем 30
-})
-
-const closeTask = (t) => {
-    deleteTask(WIDGET_ID, $(t).attr('data-id'));
-    $(t).remove();
 }
-
-const doneTask = (t) => {
-    toggleTask(WIDGET_ID, $(t).attr('data-id'), true);
-    $(t).toggleClass('done');
-}
-
-const addListeners = () => {
-    $('.close').click((e) => {
-        closeTask($(e.target).parent())
-    })
-    $('.toggleStatus').click((e) => {
-        console.log(e.target)
-        e.target.disabled = true;
-        doneTask($(e.target).parent())
-    });
-}
-
 
 const onTasksReceived = tasks => {
-    tasks.forEach(el => {
-        $('.tasks-api__content-tasks_ul')
-            .append(
-            $(` <div class="task-div ${el.done ? 'done' : ''}" data-id=${el.id}> 
-                    <input type="checkbox" class="toggleStatus"
-                    maxlength="32"
-                    ${el.done ? ' checked ' : ''}
-                    ${el.done ? ' disabled ' : ''}>
-                    <li class="task"> ${el.title} </li> 
-                    <span class="close">+</span> 
-                </div>`));
-                console.log(el.done)
+    $('.tasks-api__content-tasks_ul').empty()
+    tasks.forEach(task => {
+        $('.tasks-api__content-tasks_ul').append($(`
+        <li class="task" data-id=${task.id}>
+            <input type="checkbox" onclick="toggleStatus(this)" class=${task.done ? 'done' : 'not-done'} ${task.done ? 'checked' : ''}>
+            <span class="task-content">${task.title}</span>
+            <button class="delete-task" onclick="removeTask(this)">DEL</button>
+        </li>`))
     })
-    addListeners()
+}
+
+todoAPI.getTasks().then(response => {
+    onTasksReceived(response)
+})
+
+$('#getTasks').click(() => {
+    WIDGET_ID = $('#WIDGET_ID').val();
+    todoAPI.getTasks().then(response => {
+        onTasksReceived(response)
+    })
+})
+
+$('#addTask').click(() => {
+    if ($('#taskText').val() == '') {return}
+    $('#addTask').prop('disabled', true)
+    todoAPI.createTask(WIDGET_ID, $('#taskText').val()).then(response => {
+        if (response.status === 'success') {
+            todoAPI.getTasks().then(response => {
+                onTasksReceived(response);
+                $('#taskText').val('')
+                $('#addTask').prop('disabled', false)
+            })
+        }
+    })
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* test
+$(document).ready(function () {
+
+    //E-mail Ajax Send
+    $("form").submit(function () { //Change
+        var th = $(this);
+        $.ajax({
+            type: "POST",
+            url: "mail.php", //Change
+            data: th.serialize()
+        }).done(function () {
+
+            setTimeout(function () {
+                // Done Functions
+                th.trigger("reset");
+            }, 1000);
+        });
+        return false;
+    });
+
+});
+
+equeals
+
+window.onload = () => {
+
+    document.getElementsByTagName('form').submit(function() {
+        const request = new XMLHttpRequest();
+        request.open('POST', 'mail.php', true);
+
+        let promise = new Promise(resolve => {
+            request.send(); // Вот сюда надо данные с формы
+            resolve();
+        });
+
+        promise.then(() => {
+            this.reset()
+        }).bind(document.пуе('form'))
+
+    })
 }
 
 
 
-
-
-/* замыкание start
-
+ замыкание start
 function example() {
     let counter = 0;
     return function s() {
@@ -149,4 +199,20 @@ function example() {
 
 let counting = example();
 
-замыкание end */
+замыкание end 
+
+
+Если дождик, минуты = 0.
+Температура меньше нуля, или больше 35, минуты = 0.
+Температура 20 - минуты 20.
+*/
+
+const bruh = () => {
+
+    let t = 28,
+        rain = false,
+        min = 20;
+
+    (rain === true || t > 35 || t < 0) ? min = 0: t > 20 ? min += (min - t) : min += (t - min)
+
+}
